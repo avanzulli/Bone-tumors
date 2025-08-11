@@ -1,61 +1,42 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BoneTumorAid — Diagnosi radiologica tumori ossei</title>
-  <meta name="description" content="Strumento didattico per supporto alla diagnosi radiologica dei tumori ossei benigni e maligni." />
+  <title>BoneTumorAid — Assistente con conoscenza integrata</title>
+  <meta name="description" content="Supporto didattico alla diagnosi radiologica dei tumori ossei con regole integrate dalla lezione." />
   <style>
-    :root{
-      --bg:#0f1221; --card:#161a2f; --muted:#a9b0c7; --text:#eef1ff; --accent:#7aa2ff;
-      --ok:#45d19a; --warn:#ffd166; --bad:#ff6b6b; --chip:#212746; --chipb:#2a3159;
-      --shadow: 0 10px 30px rgba(0,0,0,.25); --radius:14px;
-    }
+    :root{--bg:#0f1221;--card:#161a2f;--muted:#a9b0c7;--text:#eef1ff;--accent:#7aa2ff;--chip:#212746;--chipb:#2a3159;--ok:#45d19a;--warn:#ffd166;--bad:#ff6b6b;--radius:14px}
     *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";background: radial-gradient(1200px 600px at 20% -10%, #1a1f3d 0, var(--bg) 60%);color:var(--text);line-height:1.45}
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px clamp(16px, 3vw, 32px);position:sticky;top:0;backdrop-filter: blur(8px);background: linear-gradient(180deg, rgba(15,18,33,.9), rgba(15,18,33,.6));border-bottom:1px solid #202646;z-index:100}
-    .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.3px}
-    .brand .logo{width:36px;height:36px;border-radius:12px;background: conic-gradient(from 210deg, var(--accent), #9a7bff, #54e1c9, var(--accent));box-shadow: 0 6px 18px rgba(122,162,255,.35) inset;position:relative;overflow:hidden}
-    .brand .logo::after{content:"";position:absolute;inset:6px;border-radius:10px;background: radial-gradient(220px 80px at 30% 0%, #ffffff55, transparent 40%)}
-    .pill{background:var(--chip);border:1px solid var(--chipb);padding:8px 12px;border-radius:999px;color:var(--muted);font-size:.9rem}
-    main{padding: 24px clamp(16px, 5vw, 64px) 56px; max-width:1200px; margin:0 auto}
-    .grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:24px}
-    @media (max-width: 980px){ .grid{grid-template-columns: 1fr} }
-    .card{background: linear-gradient(180deg, #161a2f, #131733);border:1px solid #22294f;border-radius: var(--radius);box-shadow: var(--shadow)}
-    .card h2{margin:0; padding:20px 20px 4px; font-size:1.2rem; color:#cdd6ff}
-    .card p.hint{margin:0; padding:0 20px 16px; color:var(--muted); font-size:.95rem}
-    .section{padding:16px 20px 20px; display:grid; gap:14px}
-    .row{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
-    @media (max-width: 720px){ .row{grid-template-columns: 1fr} }
-    label{display:block; font-weight:600; color:#c5ccf2; margin-bottom:6px}
-    input[type="number"], select, textarea{width:100%; padding:12px; border-radius:12px; background:#0f1330; border:1px solid #2a3159; color:var(--text); outline:none}
-    textarea{min-height:90px; resize:vertical}
-    .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{user-select:none;background:var(--chip); border:1px solid var(--chipb); padding:10px 12px; border-radius:999px; cursor:pointer; color:#cbd3ff; transition:.2s transform}
-    .chip[aria-pressed="true"]{ background:#23306b; outline:2px solid var(--accent); color:#fff }
-    .chip:hover{ transform: translateY(-2px) }
-    .actions{display:flex; gap:10px; flex-wrap:wrap; padding:16px 20px 20px; border-top:1px solid #22294f}
-    button{border:none; cursor:pointer; border-radius:12px; padding:12px 14px; font-weight:700; background:linear-gradient(180deg, #7aa2ff, #5b89ff); color:#041035; box-shadow: 0 8px 18px rgba(122,162,255,.4)}
-    button.secondary{ background:#232a51; color:#d9e2ff; box-shadow:none; border:1px solid #2a3159 }
-    button.ghost{ background:transparent; border:1px dashed #384173; color:#aab3db }
-    .result{padding:18px 20px; display:grid; gap:8px; border-top:1px solid #22294f; background: linear-gradient(180deg, #141938, #101432)}
-    .badge{padding:6px 10px; border-radius:999px; display:inline-block; font-weight:800; letter-spacing:.3px}
-    .risk-low{ background:#133f33; color:#9afad3; border:1px solid #206950 }
-    .risk-mid{ background:#463d1b; color:#ffe09a; border:1px solid #7a6221 }
-    .risk-high{ background:#4a1d27; color:#ffb3c1; border:1px solid #8a2a3e }
-    .dx-list{display:grid; gap:8px; margin-top:4px}
-    .dx-item{background:#0f1330; border:1px solid #2a3159; border-radius:12px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between; gap:12px}
-    .dx-item small{ color:var(--muted) }
-    .muted{ color:var(--muted) }
-    footer{padding:32px; text-align:center; color:#98a2d8}
-    .tiny{font-size:.85rem}
-    .kvs{display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:6px}
-    .kvs div{background:#0d112d; border:1px solid #28315f; border-radius:10px; padding:8px 10px; color:#cbd3ff}
-    .save{margin-left:auto}
-    .legend{display:flex; gap:8px; flex-wrap:wrap; padding:4px 20px 18px}
-    .legend .badge{border:1px solid #2a3159; background:#0f1330; color:#cdd6ff}
-    .hr{height:1px; background:#22294f; margin:8px 0}
-    .title{font-size:1.6rem; font-weight:800}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#0f1221;color:var(--text)}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 16px;border-bottom:1px solid #202646;background:#131733;position:sticky;top:0;z-index:10}
+    .brand{display:flex;gap:12px;align-items:center} .logo{width:36px;height:36px;border-radius:12px;background:conic-gradient(from 210deg,#7aa2ff,#9a7bff,#54e1c9,#7aa2ff)}
+    .title{font-size:1.4rem;font-weight:800} .sub{color:#aab3db;font-size:.9rem}
+    main{padding:18px;max-width:1200px;margin:0 auto}
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px} @media(max-width:980px){.grid{grid-template-columns:1fr}}
+    .card{background:#161a2f;border:1px solid #22294f;border-radius:var(--radius)}
+    .card h2{margin:0;padding:16px 16px 6px;color:#cdd6ff;font-size:1.1rem}
+    .section{padding:12px 16px 16px;display:grid;gap:12px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px} @media(max-width:720px){.row{grid-template-columns:1fr}}
+    label{display:block;margin-bottom:6px;color:#c5ccf2;font-weight:600}
+    input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #2a3159;background:#0f1330;color:var(--text)}
+    .chips{display:flex;flex-wrap:wrap;gap:8px} .chip{background:#212746;border:1px solid #2a3159;border-radius:999px;padding:8px 12px;color:#cbd3ff;cursor:pointer}
+    .chip[aria-pressed="true"]{background:#23306b;outline:2px solid var(--accent);color:#fff}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 16px}
+    button{border:none;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer;background:#5b89ff;color:#041035}
+    button.secondary{background:#232a51;color:#d9e2ff;border:1px solid #2a3159}
+    .result{padding:12px 16px;border-top:1px solid #22294f;background:#101432;display:grid;gap:10px}
+    .badge{padding:6px 10px;border-radius:999px;font-weight:800;display:inline-block}
+    .risk-low{background:#133f33;color:#9afad3;border:1px solid #206950} .risk-mid{background:#463d1b;color:#ffe09a;border:1px solid #7a6221} .risk-high{background:#4a1d27;color:#ffb3c1;border:1px solid #8a2a3e}
+    .dx-list{display:grid;gap:8px} .dx-item{background:#0f1330;border:1px solid #2a3159;border-radius:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .tiny{font-size:.9rem;color:#a9b0c7} .muted{color:#a9b0c7}
+    .kvs{display:grid;grid-template-columns:1fr 1fr;gap:6px} .kvs div{background:#0d112d;border:1px solid #28315f;border-radius:8px;padding:6px 8px}
+    details.exp{background:#0f1330;border:1px solid #2a3159;border-radius:10px;padding:10px} details.exp summary{cursor:pointer;font-weight:700}
+    .pill{background:#212746;border:1px solid #2a3159;border-radius:999px;padding:6px 10px;color:#cbd3ff}
+    .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px} @media(max-width:980px){.grid-3{grid-template-columns:1fr}}
+    .callout{border-left:4px solid #4b5bb7;background:#101432;padding:10px;border-radius:6px}
+    .hr{height:1px;background:#22294f;margin:6px 0}
   </style>
 </head>
 <body>
@@ -64,319 +45,244 @@
       <div class="logo" aria-hidden="true"></div>
       <div>
         <div class="title">BoneTumorAid</div>
-        <div class="tiny muted">Supporto didattico alla diagnosi radiologica dei tumori ossei</div>
+        <div class="sub">Motore decisionale con regole tratte dalla lezione · v1.2</div>
       </div>
     </div>
-    <div class="pill">v1.0 · offline</div>
+    <div class="pill">Offline</div>
   </header>
 
   <main>
     <div class="grid">
-      <section class="card" aria-labelledby="inputTitle">
-        <h2 id="inputTitle">Dati del caso</h2>
-        <p class="hint">Compila i campi essenziali e seleziona i reperti. Il sistema propone un rischio di malignità e una lista di diagnosi differenziali plausibili.</p>
+      <section class="card">
+        <h2>Inserimento dati</h2>
         <div class="section">
           <div class="row">
-            <div>
-              <label for="age">Età (anni)</label>
-              <input id="age" type="number" min="0" max="110" placeholder="es. 34" />
-            </div>
-            <div>
-              <label for="site">Sede ossea</label>
-              <select id="site">
-                <option value="">— seleziona —</option>
-                <option>Femore prossimale</option>
-                <option>Femore distale</option>
-                <option>Tibia prossimale</option>
-                <option>Tibia distale</option>
-                <option>Omero prossimale</option>
-                <option>Omero distale</option>
-                <option>Radio/Ulna</option>
-                <option>Mano/Piede</option>
-                <option>Pelvi</option>
-                <option>Colonna</option>
-                <option>Coste/Sterno</option>
-                <option>Mandibola/Mascella</option>
-                <option>Altro</option>
-              </select>
+            <div><label>Età (anni)</label><input id="age" type="number" min="0" max="110" placeholder="es. 34"></div>
+            <div><label>Sede scheletrica</label>
+              <select id="skeleton"><option value="">— seleziona —</option><option>Assiale (colonna, pelvi, coste/sterno)</option><option>Appendicolare</option></select>
             </div>
           </div>
-
           <div class="row">
-            <div>
-              <label for="location">Localizzazione</label>
-              <select id="location">
-                <option value="">— seleziona —</option>
-                <option value="epiphysis">Epifisi</option>
-                <option value="metaphysis">Metafisi</option>
-                <option value="diaphysis">Diafisi</option>
-                <option value="axial">Scheletro assiale</option>
+            <div><label>Osso / Regione</label>
+              <select id="site"><option value="">— seleziona —</option>
+                <option>Femore prossimale</option><option>Femore distale</option><option>Tibia prossimale</option><option>Tibia distale</option>
+                <option>Omero prossimale</option><option>Omero distale</option><option>Radio/Ulna</option><option>Mano/Piede</option>
+                <option>Pelvi</option><option>Colonna</option><option>Coste/Sterno</option><option>Mandibola/Mascella</option><option>Altro</option>
               </select>
             </div>
-            <div>
-              <label for="matrix">Matrice</label>
-              <select id="matrix">
-                <option value="">— seleziona —</option>
-                <option value="osteoid">Osteoide (denso/nuovo osso)</option>
-                <option value="chondroid">Condroide (ring-and-arc)</option>
-                <option value="fibrous">Fibrosa</option>
-                <option value="cistica">Cistica</option>
-                <option value="nessuna">Assente/indeterminata</option>
-              </select>
+            <div><label>Localizzazione longitudinale</label>
+              <select id="long"><option value="">— seleziona —</option><option value="epiphysis">Epifisi</option><option value="metaphysis">Metafisi</option><option value="diaphysis">Diafisi</option></select>
+            </div>
+          </div>
+          <div class="row">
+            <div><label>Localizzazione trasversale</label>
+              <select id="trans"><option value="">— seleziona —</option><option value="central">Intramidollare centrale</option><option value="eccentric">Intramidollare eccentrica</option><option value="intracortical">Intracorticale</option><option value="juxtacortical">Juxtacorticale/superficiale</option></select>
+            </div>
+            <div><label>Matrice / Mineralizzazione</label>
+              <select id="matrix"><option value="">— seleziona —</option><option value="osteoid">Osteoide (fluffy/cloudlike)</option><option value="chondroid">Condroide (ring-and-arc)</option><option value="fibrous">Fibrosa (vetro smerigliato)</option><option value="none">Assente/indeterminata</option></select>
             </div>
           </div>
 
           <div>
-            <label>Margini e pattern di crescita</label>
+            <label>Margini (Lodwick)</label>
             <div class="chips" id="margins">
-              <button class="chip" data-key="wellDefined">Margini netti / sclerotici</button>
-              <button class="chip" data-key="geographic">Pattern geograﬁco</button>
-              <button class="chip" data-key="moth">Moth-eaten</button>
-              <button class="chip" data-key="permeative">Permeativo</button>
+              <button class="chip" data-key="IA">IA (geografico, margine sclerotico)</button>
+              <button class="chip" data-key="IB">IB (geografico, margine netto)</button>
+              <button class="chip" data-key="IC">IC (geografico, margine sfumato)</button>
+              <button class="chip" data-key="II">II (moth-eaten)</button>
+              <button class="chip" data-key="III">III (permeativo)</button>
             </div>
           </div>
 
           <div>
-            <label>Reazione periostale</label>
-            <div class="chips" id="periosteal">
-              <button class="chip" data-key="solid">Solida</button>
-              <button class="chip" data-key="lamellated">A bulbo di cipolla</button>
-              <button class="chip" data-key="spiculated">Spicolata / raggiera</button>
+            <label>Periostale</label>
+            <div class="chips" id="peri">
+              <button class="chip" data-key="solid">Solida (non aggressiva)</button>
+              <button class="chip" data-key="lamellated">Lamellare (onion-skin)</button>
+              <button class="chip" data-key="hair">Perpendicolare (hair-on-end)</button>
+              <button class="chip" data-key="sunburst">Raggiera (sunburst)</button>
               <button class="chip" data-key="codman">Triangolo di Codman</button>
             </div>
           </div>
 
           <div>
-            <label>Altri reperti</label>
+            <label>Numero e coinvolgimento</label>
             <div class="chips" id="extras">
+              <button class="chip" data-key="multi">Lesioni multiple</button>
+              <button class="chip" data-key="soft">Massa dei tessuti molli</button>
+              <button class="chip" data-key="endosteal">Endosteal scalloping</button>
+              <button class="chip" data-key="ballooning">Insufflazione/espansione</button>
               <button class="chip" data-key="corticalBreak">Interruzione corticale</button>
-              <button class="chip" data-key="softTissue">Massa dei tessuti molli</button>
-              <button class="chip" data-key="matrixCalc">Calcificazioni “ring-and-arc”</button>
-              <button class="chip" data-key="nidusPain">Dolore notturno con sollievo FANS</button>
-              <button class="chip" data-key="fluidFluid">Fluid–fluid levels</button>
-              <button class="chip" data-key="multiLesions">Lesioni multiple</button>
+              <button class="chip" data-key="fluid">Fluid–fluid levels</button>
+              <button class="chip" data-key="nidus">Dolore notturno ↑ (FANS ↓)</button>
             </div>
           </div>
 
           <div class="row">
-            <div>
-              <label for="notes">Note libere (RM/TC/RX)</label>
-              <textarea id="notes" placeholder="Segnala elementi salienti dell’iconografia…"></textarea>
-            </div>
-            <div>
-              <label for="clin">Dati clinici</label>
-              <textarea id="clin" placeholder="Esordio, dolore, febbre, storia oncologica…"></textarea>
-            </div>
+            <div><label>Note radiologiche</label><textarea id="notes" placeholder="RM/TC/RX: dettagli…"></textarea></div>
+            <div><label>Dati clinici</label><textarea id="clin" placeholder="Età, esordio, febbre, storia oncologica…"></textarea></div>
           </div>
         </div>
-
         <div class="actions">
-          <button id="analyze">Calcola rischio e DDx</button>
+          <button id="analyze">Valuta</button>
           <button class="secondary" id="reset">Azzera</button>
-          <button class="ghost save" id="export">Esporta relazione</button>
-        </div>
-
-        <div class="legend tiny">
-          <span class="badge">Suggerimenti rapidi</span>
-          <span class="tiny muted">• Margini netti/solida → più verosimilmente benigno</span>
-          <span class="tiny muted">• Permeativo/spicolata/Codman/extraossea → sospetto maligno</span>
-          <span class="tiny muted">• <em>Ring-and-arc</em> → matrice condroide (enchondroma vs condrosarcoma, età e segni di aggressività aiutano)</span>
+          <button class="secondary" id="export">Esporta txt</button>
         </div>
       </section>
 
-      <section class="card" aria-labelledby="outTitle">
-        <h2 id="outTitle">Output</h2>
-        <div class="result" id="riskPane">
-          <div id="riskBadge" class="badge risk-low">Rischio: in attesa dati</div>
-          <div class="kvs" id="kvs"></div>
-          <div class="hr"></div>
-          <div>
-            <div style="font-weight:700; margin-bottom:6px">Diagnosi differenziali suggerite</div>
-            <div class="dx-list" id="dxList"></div>
+      <section class="card">
+        <h2>Output decisionale</h2>
+        <div class="section">
+          <div class="result">
+            <div id="riskBadge" class="badge risk-low">Rischio: in attesa dati</div>
+            <div id="kvs" class="kvs"></div>
+            <div class="hr"></div>
+            <div>
+              <strong>Diagnosi differenziali suggerite</strong>
+              <div id="dxList" class="dx-list"></div>
+            </div>
           </div>
-        </div>
-        <div class="section tiny muted">
-          Nota: lo strumento è pensato per uso didattico. La diagnosi definitiva richiede integrazione clinico-radiologica completa e talora consenso istologico.
+
+          <details class="exp">
+            <summary>Categoria Bone‑RADS™ (stima) e gestione</summary>
+            <div id="bonerads" class="tiny"></div>
+          </details>
+
+          <details class="exp">
+            <summary>Perché queste proposte?</summary>
+            <div id="why" class="tiny"></div>
+          </details>
+
+          <details class="exp">
+            <summary>Template di referto strutturato</summary>
+            <div class="tiny" id="template"></div>
+          </details>
+
+          <div class="callout tiny">
+            Strumento a scopo <strong>didattico</strong>. Non sostituisce giudizio clinico/istologico. Le “regole” operative sono derivate dalla lezione caricata.
+          </div>
         </div>
       </section>
     </div>
   </main>
 
-  <footer class="tiny">
-    © 2025 BoneTumorAid — creato per uso educativo. Nessun dato inviato in rete (tutto in locale).
-  </footer>
-
   <script>
-    document.querySelectorAll('.chip').forEach(el=>{
-      el.setAttribute('aria-pressed','false');
-      el.addEventListener('click', ()=>{
-        const pressed = el.getAttribute('aria-pressed')==='true';
-        el.setAttribute('aria-pressed', pressed?'false':'true');
-      });
-    });
-    document.getElementById('reset').addEventListener('click', ()=>{
-      document.querySelectorAll('input,select,textarea').forEach(el=>{
-        if(el.tagName==='SELECT') el.selectedIndex = 0; else el.value='';
-      });
-      document.querySelectorAll('.chip').forEach(el=>el.setAttribute('aria-pressed','false'));
-      showRisk('in attesa dati', 'low', []);
-      document.getElementById('dxList').innerHTML='';
-      document.getElementById('kvs').innerHTML='';
-    });
+    // Chips
+    function initChips(id){document.querySelectorAll('#'+id+' .chip').forEach(el=>{el.setAttribute('aria-pressed','false'); el.addEventListener('click',()=>{el.setAttribute('aria-pressed',el.getAttribute('aria-pressed')==='true'?'false':'true');});});}
+    ['margins','peri','extras'].forEach(initChips);
+    document.getElementById('reset').addEventListener('click',()=>{document.querySelectorAll('input,select,textarea').forEach(el=>{if(el.tagName==='SELECT') el.selectedIndex=0; else el.value='';}); document.querySelectorAll('.chip').forEach(el=>el.setAttribute('aria-pressed','false')); resetOut();});
 
-    function getSelections(groupId){
-      const sel = {};
-      document.querySelectorAll('#'+groupId+' .chip').forEach(ch=>{
-        sel[ch.dataset.key] = ch.getAttribute('aria-pressed')==='true';
-      });
-      return sel;
+    function v(id){return document.getElementById(id).value.trim();}
+    function sel(id){const s={}; document.querySelectorAll('#'+id+' .chip').forEach(c=>s[c.dataset.key]=c.getAttribute('aria-pressed')==='true'); return s;}
+    function badge(tier,text){const b=document.getElementById('riskBadge'); b.className='badge risk-'+tier; b.textContent='Rischio: '+text;}
+    function kvs(pairs){const box=document.getElementById('kvs'); box.innerHTML=''; pairs.forEach(([k,val])=>{const d=document.createElement('div'); d.innerHTML='<strong>'+k+':</strong> '+val; box.appendChild(d);});}
+    function resetOut(){badge('low','in attesa dati'); document.getElementById('dxList').innerHTML=''; document.getElementById('bonerads').innerHTML=''; document.getElementById('why').innerHTML=''; document.getElementById('template').innerHTML='';}
+
+    // Knowledge rules
+    function agePriors(age){const w={}; if(age<=20){w['Osteosarcoma']=0.6; w['Sarcoma di Ewing']=0.6; w['Osteoma osteoide']=0.5; w['ABC']=0.4;}
+      else if(age<=40){w['Ewing']=0.4; w['GCT']=0.5; w['Chondroblastoma']=0.5;}
+      else{w['Metastasi']=0.7; w['Mieloma/Plasmocitoma']=0.7; w['Condrosarcoma']=0.4;} return w;}
+
+    const SITE_HINTS = [['Colonna','Emangioma',0.5],['Colonna','Metastasi',0.5],['Pelvi','Condrosarcoma',0.6],['Mano/Piede','Encondroma',0.7]];
+    function longitudinal(long){const w={}; if(long==='epiphysis'){w['GCT']=0.6; w['Chondroblastoma']=0.6;} if(long==='diaphysis'){w['Ewing']=0.5;} return w;}
+    function transverse(tr){const w={}; if(tr==='intracortical') w['Osteoma osteoide']=0.8; if(tr==='juxtacortical') w['Osteosarcoma superficiale']=0.6; return w;}
+    function matrixWeights(m){const w={}; if(m==='chondroid'){w['Encondroma']=0.5; w['Condrosarcoma']=0.6; w['Chondroblastoma']= (w['Chondroblastoma']||0)+0.3;}
+      if(m==='osteoid'){w['Osteoma osteoide']=0.6; w['Osteosarcoma']= (w['Osteosarcoma']||0)+0.5;}
+      if(m==='fibrous'){w['Displasia fibrosa']=0.7;} return w;}
+
+    function marginAgg(m){let a=0; if(m.IA) a-=2; if(m.IB) a-=1; if(m.IC) a+=1; if(m.II) a+=2; if(m.III) a+=3; return a;}
+    function periAgg(p){let a=0; if(p.solid) a-=1; if(p.lamellated) a+=2; if(p.hair) a+=3; if(p.sunburst) a+=3; if(p.codman) a+=3; return a;}
+    function extraAgg(e){let a=0; if(e.soft) a+=3; if(e.corticalBreak) a+=2; if(e.multi) a+=2; if(e.nidus) a-=3; return a;}
+
+    const BASE = ['Osteoma osteoide','ABC','Encondroma','Displasia fibrosa','GCT','Chondroblastoma','Osteosarcoma','Ewing','Condrosarcoma','Metastasi','Mieloma/Plasmocitoma','Emangioma'];
+    function buildWeights(age, skeleton, site, long, trans, matrix, m, p, e){
+      const W={}; BASE.forEach(n=>W[n]=0.01);
+      const ap = agePriors(age); for(const k in ap) W[k]=(W[k]||0)+ap[k];
+      SITE_HINTS.forEach(([needle,dx,w])=>{ if((site||'').includes(needle)) W[dx]=(W[dx]||0)+w; });
+      if((skeleton||'').includes('Assiale')) { W['Metastasi']+=0.2; W['Mieloma/Plasmocitoma']+=0.2; }
+      const lo = longitudinal(long); for(const k in lo) W[k]=(W[k]||0)+lo[k];
+      const tr = transverse(trans); for(const k in tr) W[k]=(W[k]||0)+tr[k];
+      const mw = matrixWeights(matrix); for(const k in mw) W[k]=(W[k]||0)+mw[k];
+      const A = marginAgg(m)+periAgg(p)+extraAgg(e);
+      if(A>=4){ W['Osteosarcoma']+=0.6; W['Ewing']+=0.5; W['Metastasi']+=0.5; W['Mieloma/Plasmocitoma']+=0.4; }
+      else if(A>=1){ W['GCT']+=0.3; if(matrix==='chondroid') W['Condrosarcoma']+=0.4; }
+      else{ W['Osteoma osteoide']+=0.3; if(matrix==='chondroid') W['Encondroma']+=0.3; if(matrix==='fibrous') W['Displasia fibrosa']+=0.3; }
+      if(e.nidus) W['Osteoma osteoide']+=0.9;
+      if(e.fluid) W['ABC']+=0.6;
+      if(long==='epiphysis' && age>20) W['GCT']+=0.4;
+      if((site||'').includes('Colonna')) W['Emangioma']+=0.3;
+      return W;
     }
 
-    function scoreRisk(){
-      const margins = getSelections('margins');
-      const peri = getSelections('periosteal');
-      const extras = getSelections('extras');
-      let score = 0;
-      if(margins.wellDefined) score -= 2;
-      if(margins.geographic) score -= 1;
-      if(margins.moth) score += 2;
-      if(margins.permeative) score += 3;
-      if(peri.solid) score -= 1;
-      if(peri.lamellated) score += 2;
-      if(peri.spiculated) score += 3;
-      if(peri.codman) score += 3;
-      if(extras.corticalBreak) score += 2;
-      if(extras.softTissue) score += 3;
-      if(extras.matrixCalc) score -= 1;
-      if(extras.nidusPain) score -= 3;
-      if(extras.fluidFluid) score += 0;
-      if(extras.multiLesions) score += 2;
-      return score;
+    function toDxList(W){const arr=Object.entries(W).map(([k,v])=>[k,Math.max(0,Math.min(0.98,v/2))]); arr.sort((a,b)=>b[1]-a[1]); return arr.slice(0,8);}
+    function riskFromAgg(A){ if(A>=4) return ['alto sospetto di malignità','high']; if(A>=1) return ['intermedio','mid']; return ['basso / verosimilmente benigno','low']; }
+    function boneRADS(A, matrix, e, m){
+      let cat = 'BR-2 (verosimile benigno)';
+      let mgmt = 'Follow-up/nessuna ulteriore indagine';
+      if(A>=4 || e.soft || e.corticalBreak || m.III || m.II){ cat = 'BR-4 (sospetto elevato)'; mgmt = 'Invio a centro di riferimento; RM per staging locale; considerare biopsia'; }
+      else if(A>=1 || m.IC || m.lamellated || matrix==='chondroid'){ cat = 'BR-3 (indeterminato)'; mgmt = 'Approfondimento (RM/TC) e follow-up ravvicinato'; }
+      return [cat, mgmt];
     }
-
-    function riskLabelFromScore(score){
-      if(score>=4) return ['alto sospetto di malignità','high'];
-      if(score>=1) return ['intermedio','mid'];
-      return ['basso / verosimilmente benigno','low'];
+    function whyText(A, matrix, m, p, e, age, site, long, trans){
+      const bullets = [];
+      bullets.push('Età: '+age+' → impatta i priori (es. <20 aa: osteosarcoma/Ewing; >40 aa: metastasi/mieloma). [Sez. Age]');
+      if((site||'').includes('Colonna')) bullets.push('Sede: colonna → emangioma, metastasi/mieloma più probabili. [Sez. Location]');
+      if(matrix==='chondroid') bullets.push('Matrice condroide (ring-and-arc) → enchondroma/condrosarcoma. [Sez. Matrix]');
+      if(matrix==='osteoid') bullets.push('Matrice osteoide → osteoma osteoide/osteosarcoma. [Sez. Matrix]');
+      if(m.III||m.II||p.hair||p.sunburst||p.codman||e.soft||e.corticalBreak) bullets.push('Segni di aggressività (margini II/III, periostale aggressiva, massa extraossea, rottura corticale). [Sez. Margins/Periosteal/Soft-tissue]');
+      if(e.nidus) bullets.push('Dolore notturno con sollievo ai FANS → osteoma osteoide. [Intracorticale]');
+      if(e.fluid) bullets.push('Fluid–fluid levels → ABC.');
+      if(long==='epiphysis') bullets.push('Localizzazione epifisaria → GCT/Chondroblastoma. [Longitudinal]');
+      return '<ul>'+bullets.map(b=>'<li>'+b+'</li>').join('')+'</ul>';
     }
-
-    function showRisk(label, tier, bullets){
-      const badge = document.getElementById('riskBadge');
-      badge.textContent = 'Rischio: ' + label;
-      badge.className = 'badge risk-' + tier;
-      const kv = document.getElementById('kvs');
-      kv.innerHTML = '';
-      (bullets||[]).forEach(([k,v])=>{
-        const d = document.createElement('div');
-        d.innerHTML = '<strong>'+k+':</strong> '+v;
-        kv.appendChild(d);
-      });
+    function renderDx(list){const box=document.getElementById('dxList'); box.innerHTML=''; if(!list.length){box.innerHTML='<div class="tiny">Inserire dati.</div>'; return;}
+      list.forEach(([name,score])=>{const d=document.createElement('div'); const pct=Math.round(score*100); d.className='dx-item';
+        d.innerHTML='<div><strong>'+name+'</strong><br><span class="tiny">confidenza stimata: '+pct+'%</span></div><progress max="100" value="'+pct+'" style="width:170px;height:10px"></progress>'; box.appendChild(d);});
     }
-
-    function value(id){ return document.getElementById(id).value.trim(); }
-
-    function generateDDx(age, site, loc, matrix, sel){
-      age = parseInt(age||'0',10);
-      const list = [];
-      const aggressive = sel.margins.permeative || sel.margins.moth || sel.periosteal.spiculated || sel.periosteal.codman || sel.extras.softTissue || sel.extras.corticalBreak;
-      const chondroid = matrix==='chondroid' || sel.extras.matrixCalc;
-      const nidusPattern = sel.extras.nidusPain;
-
-      if(age<=20){
-        if(aggressive){ list.push(['Osteosarcoma', 0.92],['Sarcoma di Ewing', 0.85]); }
-        else{ list.push(['Osteoma osteoide', nidusPattern?0.88:0.6], ['Cisti aneurismatica (ABC)', sel.extras.fluidFluid?0.7:0.5]); if(chondroid) list.push(['Encondroma', 0.5]); }
-      }else if(age<=40){
-        if(aggressive){ if(chondroid) list.push(['Condrosarcoma (raro <40, valutare aggressività)', 0.6]); list.push(['Sarcoma di Ewing', 0.7]); if(loc==='epiphysis') list.push(['Tumore a cellule giganti (GCT) aggressivo', 0.65]); }
-        else{ if(loc==='epiphysis') list.push(['Chondroblastoma', 0.75]); list.push(['Tumore a cellule giganti (GCT)', 0.7]); if(chondroid) list.push(['Encondroma', 0.65]); if(nidusPattern) list.push(['Osteoma osteoide', 0.7]); }
-      }else{
-        if(aggressive){ list.push(['Metastasi', 0.9],['Mieloma multiplo / plasmocitoma', 0.85]); if(chondroid) list.push(['Condrosarcoma', 0.8]); list.push(['Osteosarcoma secondario (Paget/radiazioni)', 0.55]); }
-        else{ if(chondroid) list.push(['Encondroma vs condrosarcoma a basso grado', 0.7]); list.push(['Emangioma (soprattutto vertebre)', site.includes('Colonna')?0.7:0.45]); }
-      }
-
-      if(loc==='epiphysis'){
-        list.unshift(['GCT (epifisario, >20 anni)', age>20?0.78:0.3]);
-        if(age<25) list.unshift(['Chondroblastoma (epifisario, <25 anni)', 0.8]);
-      }
-      if(loc==='diaphysis'){
-        if(age<30 && aggressive) list.unshift(['Ewing (diaphisario)', 0.82]);
-      }
-      if(site.includes('Mano')||site.includes('Piede')){
-        if(chondroid) list.unshift(['Encondroma (mano/piede)', 0.82]);
-      }
-      if(site.includes('Pelvi')){
-        if(chondroid) list.unshift(['Condrosarcoma (pelvi)', 0.82]);
-      }
-      if(site.includes('Colonna')){
-        list.unshift(['Emangioma vertebrale', 0.6]);
-        if(aggressive && age>40) list.unshift(['Metastasi vertebrali', 0.88]);
-      }
-      if(nidusPattern) list.unshift(['Osteoma osteoide (nidus, dolore notturno)', 0.9]);
-      if(sel.extras.fluidFluid) list.unshift(['Cisti aneurismatica (fluid–fluid levels)', 0.78]);
-
-      const dedup = {}; const out = [];
-      for(const [name,score] of list){
-        if(!dedup[name]){ dedup[name]=true; out.push([name, Math.max(0.3, Math.min(0.98, score||0.5))]); }
-      }
-      return out.slice(0,8);
-    }
-
-    function renderDx(list){
-      const box = document.getElementById('dxList');
-      box.innerHTML='';
-      if(list.length===0){ box.innerHTML = '<div class="tiny muted">Nessuna proposta (inserire dati e riprovare).</div>'; return; }
-      list.forEach(([name,score])=>{
-        const item = document.createElement('div');
-        const pct = Math.round(score*100);
-        item.className='dx-item';
-        item.innerHTML = '<div><strong>'+name+'</strong><br><small>confidenza stimata: '+pct+'%</small></div>' +
-                         '<progress max="100" value="'+pct+'" style="width:180px; height:10px"></progress>';
-        box.appendChild(item);
-      });
-    }
-
-    function exportReport(payload){
-      const {age, site, loc, matrix, notes, clin, riskText, dx} = payload;
-      const now = new Date().toISOString().slice(0,16).replace('T',' ');
+    function renderBoneRADS(cat, mgmt){document.getElementById('bonerads').innerHTML = '<div><strong>'+cat+'</strong><br>'+mgmt+'</div>'; }
+    function renderTemplate(age, site, long, trans, matrix, m, p, e){
       const lines = [];
-      lines.push('BoneTumorAid — Esportazione caso ('+now+')','',
-                 'DATI:','Età: '+(age||'-'),'Sede: '+(site||'-'),'Localizzazione: '+(loc||'-'),'Matrice: '+(matrix||'-'),'',
-                 'Rischio: '+riskText,'','Diagnosi differenziali:');
-      dx.forEach(([name,score],i)=>lines.push((i+1)+'. '+name+' ('+Math.round(score*100)+'%)'));
-      if(clin){ lines.push('','Dati clinici:',clin); }
-      if(notes){ lines.push('','Note radiologiche:',notes); }
-      const blob = new Blob([lines.join('\n')], {type:'text/plain'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'BoneTumorAid_caso.txt';
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      lines.push('STRUTTURATO (didattico)');
+      lines.push('- Età: '+(age||'-'));
+      lines.push('- Sede: '+(site||'-')+'; scheletro: '+(v('skeleton')||'-'));
+      lines.push('- Localizzazione: '+(long||'-')+' / '+(trans||'-'));
+      lines.push('- Matrice: '+(matrix||'-'));
+      lines.push('- Margini: '+Object.keys(m).filter(k=>m[k]).join(', ')||'-');
+      lines.push('- Reazione periostale: '+Object.keys(p).filter(k=>p[k]).join(', ')||'-');
+      lines.push('- Altri segni: '+Object.keys(e).filter(k=>e[k]).join(', ')||'-');
+      document.getElementById('template').innerHTML = '<pre style="white-space:pre-wrap">'+lines.join('\n')+'</pre>';
     }
 
-    function collectSelections(){ return {margins:getSelections('margins'), periosteal:getSelections('periosteal'), extras:getSelections('extras')}; }
-    function getSelections(id){ const s={}; document.querySelectorAll('#'+id+' .chip').forEach(c=>s[c.dataset.key]=c.getAttribute('aria-pressed')==='true'); return s;}
-
-    function analyze(){
-      const age = value('age'), site = value('site'), loc = value('location'), matrix = value('matrix');
-      const notes = value('notes'), clin = value('clin');
-      const score = scoreRisk();
-      const [riskText, tier] = riskLabelFromScore(score);
-      const dx = generateDDx(age, site, loc, matrix, collectSelections());
-      showRisk(riskText, tier, [['Score',score],['Età',age||'—'],['Sede',site||'—'],['Localizzazione',loc||'—'],['Matrice',matrix||'—']]);
+    document.getElementById('analyze').addEventListener('click',()=>{
+      const age = parseInt(v('age')||'0',10);
+      const skeleton = v('skeleton');
+      const site = v('site');
+      const long = v('long');
+      const trans = v('trans');
+      const matrix = v('matrix');
+      const m = sel('margins'); const p = sel('peri'); const e = sel('extras');
+      const A = (m.IC?1:0)+(m.II?2:0)+(m.III?3:0)+(p.lamellated?2:0)+(p.hair?3:0)+(p.sunburst?3:0)+(p.codman?3:0)+(e.soft?3:0)+(e.corticalBreak?2:0)+(e.multi?2:0)-(m.IA?2:0)-(m.IB?1:0)-(p.solid?1:0)-(e.nidus?3:0);
+      const [rtierText, rtier] = riskFromAgg(A);
+      badge(rtier, rtierText);
+      kvs([['Score aggressività',A],['Età',age||'—'],['Sede',site||'—'],['Long/Trans', (long||'—')+' / '+(trans||'—')],['Matrice',matrix||'—']]);
+      const W = buildWeights(age, skeleton, site, long, trans, matrix, m, p, e);
+      const dx = toDxList(W);
       renderDx(dx);
-      return {age, site, loc, matrix, notes, clin, riskText, riskTier:tier, dx};
-    }
+      const [brCat, brMgmt] = boneRADS(A, matrix, e, m);
+      renderBoneRADS(brCat, brMgmt);
+      document.getElementById('why').innerHTML = whyText(A, matrix, m, p, e, age, site, long, trans);
+      renderTemplate(age, site, long, trans, matrix, m, p, e);
+      localStorage.setItem('bta_last_v12', JSON.stringify({age,skeleton,site,long,trans,matrix,m,p,e,dx}));
+    });
 
-    document.getElementById('analyze').addEventListener('click', ()=>{ const p = analyze(); localStorage.setItem('bta_last', JSON.stringify(p)); });
-    document.getElementById('export').addEventListener('click', ()=>{ const p = analyze(); exportReport(p); });
-
-    (function restore(){
-      const saved = localStorage.getItem('bta_last'); if(!saved) return;
-      try{
-        const p = JSON.parse(saved);
-        document.getElementById('age').value = p.age||'';
-        setSel('site', p.site); setSel('location', p.loc); setSel('matrix', p.matrix);
-        document.getElementById('notes').value = p.notes||''; document.getElementById('clin').value = p.clin||'';
-      }catch(e){}
-      function setSel(id,val){ const el=document.getElementById(id); [...el.options].forEach((o,i)=>{ if(o.text===val||o.value===val) el.selectedIndex=i; }); }
-    })();
+    document.getElementById('export').addEventListener('click',()=>{
+      const saved = localStorage.getItem('bta_last_v12'); if(!saved) return alert('Nessun caso da esportare');
+      const p = JSON.parse(saved);
+      const now=new Date().toISOString().slice(0,16).replace('T',' ');
+      const lines=['BoneTumorAid (v1.2) — Export '+now,'','DATI:','Età: '+(p.age||'-'),'Sede: '+(p.site||'-'),'Long/Trans: '+(p.long||'-')+' / '+(p.trans||'-'),'Matrice: '+(p.matrix||'-'),'','Diagnosi differenziali:'];
+      (p.dx||[]).forEach(([n,s],i)=>lines.push((i+1)+'. '+n+' ('+Math.round(s*100)+'%)'));
+      const blob=new Blob([lines.join('\n')],{type:'text/plain'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='BoneTumorAid_case.txt'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
   </script>
 </body>
 </html>
