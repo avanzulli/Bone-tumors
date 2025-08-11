@@ -4,19 +4,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BoneTumorAid — Assistente con conoscenza integrata</title>
-  <meta name="description" content="Supporto didattico alla diagnosi radiologica dei tumori ossei con regole integrate dalla lezione." />
+  <title>BoneTumorAid — v1.3 (KB + Mano/Piede + Bone‑RADS)</title>
+  <meta name="description" content="Assistente didattico per tumori ossei: motore decisionale con conoscenza integrata dalla lezione, regole Mano/Piede e checklist Bone‑RADS." />
   <style>
-    :root{--bg:#0f1221;--card:#161a2f;--muted:#a9b0c7;--text:#eef1ff;--accent:#7aa2ff;--chip:#212746;--chipb:#2a3159;--ok:#45d19a;--warn:#ffd166;--bad:#ff6b6b;--radius:14px}
+    :root{--bg:#0f1221;--card:#161a2f;--muted:#a9b0c7;--text:#eef1ff;--accent:#7aa2ff;--radius:14px}
     *{box-sizing:border-box} html,body{height:100%}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#0f1221;color:var(--text)}
     header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 16px;border-bottom:1px solid #202646;background:#131733;position:sticky;top:0;z-index:10}
     .brand{display:flex;gap:12px;align-items:center} .logo{width:36px;height:36px;border-radius:12px;background:conic-gradient(from 210deg,#7aa2ff,#9a7bff,#54e1c9,#7aa2ff)}
-    .title{font-size:1.4rem;font-weight:800} .sub{color:#aab3db;font-size:.9rem}
+    .title{font-size:1.2rem;font-weight:800} .sub{color:#aab3db;font-size:.9rem}
     main{padding:18px;max-width:1200px;margin:0 auto}
     .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px} @media(max-width:980px){.grid{grid-template-columns:1fr}}
     .card{background:#161a2f;border:1px solid #22294f;border-radius:var(--radius)}
-    .card h2{margin:0;padding:16px 16px 6px;color:#cdd6ff;font-size:1.1rem}
+    .card h2{margin:0;padding:16px 16px 6px;color:#cdd6ff;font-size:1.05rem}
     .section{padding:12px 16px 16px;display:grid;gap:12px}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:12px} @media(max-width:720px){.row{grid-template-columns:1fr}}
     label{display:block;margin-bottom:6px;color:#c5ccf2;font-weight:600}
@@ -30,12 +30,10 @@
     .badge{padding:6px 10px;border-radius:999px;font-weight:800;display:inline-block}
     .risk-low{background:#133f33;color:#9afad3;border:1px solid #206950} .risk-mid{background:#463d1b;color:#ffe09a;border:1px solid #7a6221} .risk-high{background:#4a1d27;color:#ffb3c1;border:1px solid #8a2a3e}
     .dx-list{display:grid;gap:8px} .dx-item{background:#0f1330;border:1px solid #2a3159;border-radius:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
-    .tiny{font-size:.9rem;color:#a9b0c7} .muted{color:#a9b0c7}
+    .tiny{font-size:.9rem;color:#a9b0c7}
     .kvs{display:grid;grid-template-columns:1fr 1fr;gap:6px} .kvs div{background:#0d112d;border:1px solid #28315f;border-radius:8px;padding:6px 8px}
     details.exp{background:#0f1330;border:1px solid #2a3159;border-radius:10px;padding:10px} details.exp summary{cursor:pointer;font-weight:700}
     .pill{background:#212746;border:1px solid #2a3159;border-radius:999px;padding:6px 10px;color:#cbd3ff}
-    .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px} @media(max-width:980px){.grid-3{grid-template-columns:1fr}}
-    .callout{border-left:4px solid #4b5bb7;background:#101432;padding:10px;border-radius:6px}
     .hr{height:1px;background:#22294f;margin:6px 0}
   </style>
 </head>
@@ -45,7 +43,7 @@
       <div class="logo" aria-hidden="true"></div>
       <div>
         <div class="title">BoneTumorAid</div>
-        <div class="sub">Motore decisionale con regole tratte dalla lezione · v1.2</div>
+        <div class="sub">v1.3 · Conoscenza integrata + Mano/Piede + Checklist Bone‑RADS</div>
       </div>
     </div>
     <div class="pill">Offline</div>
@@ -66,8 +64,8 @@
             <div><label>Osso / Regione</label>
               <select id="site"><option value="">— seleziona —</option>
                 <option>Femore prossimale</option><option>Femore distale</option><option>Tibia prossimale</option><option>Tibia distale</option>
-                <option>Omero prossimale</option><option>Omero distale</option><option>Radio/Ulna</option><option>Mano/Piede</option>
-                <option>Pelvi</option><option>Colonna</option><option>Coste/Sterno</option><option>Mandibola/Mascella</option><option>Altro</option>
+                <option>Omero prossimale</option><option>Omero distale</option><option>Radio/Ulna</option>
+                <option>Mano/Piede</option><option>Pelvi</option><option>Colonna</option><option>Coste/Sterno</option><option>Mandibola/Mascella</option><option>Altro</option>
               </select>
             </div>
             <div><label>Localizzazione longitudinale</label>
@@ -144,6 +142,22 @@
           </div>
 
           <details class="exp">
+            <summary>Checklist Bone‑RADS™ (didattica)</summary>
+            <div class="tiny" id="brcheck">
+              <div style="display:grid;gap:8px">
+                <label><input type="checkbox" id="br_pain"> Dolore attribuibile alla lesione</label>
+                <label><input type="checkbox" id="br_cancer"> Storia di neoplasia nota</label>
+                <label><input type="checkbox" id="br_typical"> Aspetto tipico benigno (NOF/FD/OO, emangioma vertebrale, osteocondroma classico, cisti semplice…)</label>
+                <label><input type="checkbox" id="br_fat"> Componente adiposa/macchie di grasso (benigno)</label>
+                <label><input type="checkbox" id="br_aggr_peri"> Periostale aggressiva (lamellare/spicolata/Codman)</label>
+                <label><input type="checkbox" id="br_cortex"> Interruzione corticale</label>
+                <label><input type="checkbox" id="br_soft"> Massa tessuti molli</label>
+                <label><input type="checkbox" id="br_deep_scallop"> Endosteal scalloping profondo (>2/3 spessore)</label>
+              </div>
+            </div>
+          </details>
+
+          <details class="exp">
             <summary>Categoria Bone‑RADS™ (stima) e gestione</summary>
             <div id="bonerads" class="tiny"></div>
           </details>
@@ -158,8 +172,8 @@
             <div class="tiny" id="template"></div>
           </details>
 
-          <div class="callout tiny">
-            Strumento a scopo <strong>didattico</strong>. Non sostituisce giudizio clinico/istologico. Le “regole” operative sono derivate dalla lezione caricata.
+          <div class="tiny" style="border-left:4px solid #4b5bb7;background:#101432;padding:10px;border-radius:6px">
+            Strumento a scopo <strong>didattico</strong>. Non sostituisce giudizio clinico/istologico. Bone‑RADS in app è una <em>semplificazione</em> per training.
           </div>
         </div>
       </section>
@@ -167,7 +181,7 @@
   </main>
 
   <script>
-    // Chips
+    // Chips init
     function initChips(id){document.querySelectorAll('#'+id+' .chip').forEach(el=>{el.setAttribute('aria-pressed','false'); el.addEventListener('click',()=>{el.setAttribute('aria-pressed',el.getAttribute('aria-pressed')==='true'?'false':'true');});});}
     ['margins','peri','extras'].forEach(initChips);
     document.getElementById('reset').addEventListener('click',()=>{document.querySelectorAll('input,select,textarea').forEach(el=>{if(el.tagName==='SELECT') el.selectedIndex=0; else el.value='';}); document.querySelectorAll('.chip').forEach(el=>el.setAttribute('aria-pressed','false')); resetOut();});
@@ -183,7 +197,7 @@
       else if(age<=40){w['Ewing']=0.4; w['GCT']=0.5; w['Chondroblastoma']=0.5;}
       else{w['Metastasi']=0.7; w['Mieloma/Plasmocitoma']=0.7; w['Condrosarcoma']=0.4;} return w;}
 
-    const SITE_HINTS = [['Colonna','Emangioma',0.5],['Colonna','Metastasi',0.5],['Pelvi','Condrosarcoma',0.6],['Mano/Piede','Encondroma',0.7]];
+    const SITE_HINTS = [['Colonna','Emangioma',0.5],['Colonna','Metastasi',0.5],['Pelvi','Condrosarcoma',0.6],['Mano/Piede','Encondroma',0.9]];
     function longitudinal(long){const w={}; if(long==='epiphysis'){w['GCT']=0.6; w['Chondroblastoma']=0.6;} if(long==='diaphysis'){w['Ewing']=0.5;} return w;}
     function transverse(tr){const w={}; if(tr==='intracortical') w['Osteoma osteoide']=0.8; if(tr==='juxtacortical') w['Osteosarcoma superficiale']=0.6; return w;}
     function matrixWeights(m){const w={}; if(m==='chondroid'){w['Encondroma']=0.5; w['Condrosarcoma']=0.6; w['Chondroblastoma']= (w['Chondroblastoma']||0)+0.3;}
@@ -203,6 +217,12 @@
       const lo = longitudinal(long); for(const k in lo) W[k]=(W[k]||0)+lo[k];
       const tr = transverse(trans); for(const k in tr) W[k]=(W[k]||0)+tr[k];
       const mw = matrixWeights(matrix); for(const k in mw) W[k]=(W[k]||0)+mw[k];
+      // Mano/Piede regole aggiuntive (condroide e aggressività)
+      if((site||'').includes('Mano/Piede')) {
+        if(matrix==='chondroid') { W['Encondroma'] += 0.6; }
+        if((m.IC||m.II||m.III||e.corticalBreak||e.soft) && matrix==='chondroid') { W['Condrosarcoma'] = (W['Condrosarcoma']||0)+0.4; }
+        if(e.endosteal) { W['Encondroma'] += 0.2; } // scalloping spesso benigno se superficiale
+      }
       const A = marginAgg(m)+periAgg(p)+extraAgg(e);
       if(A>=4){ W['Osteosarcoma']+=0.6; W['Ewing']+=0.5; W['Metastasi']+=0.5; W['Mieloma/Plasmocitoma']+=0.4; }
       else if(A>=1){ W['GCT']+=0.3; if(matrix==='chondroid') W['Condrosarcoma']+=0.4; }
@@ -216,25 +236,43 @@
 
     function toDxList(W){const arr=Object.entries(W).map(([k,v])=>[k,Math.max(0,Math.min(0.98,v/2))]); arr.sort((a,b)=>b[1]-a[1]); return arr.slice(0,8);}
     function riskFromAgg(A){ if(A>=4) return ['alto sospetto di malignità','high']; if(A>=1) return ['intermedio','mid']; return ['basso / verosimilmente benigno','low']; }
+
     function boneRADS(A, matrix, e, m){
-      let cat = 'BR-2 (verosimile benigno)';
-      let mgmt = 'Follow-up/nessuna ulteriore indagine';
-      if(A>=4 || e.soft || e.corticalBreak || m.III || m.II){ cat = 'BR-4 (sospetto elevato)'; mgmt = 'Invio a centro di riferimento; RM per staging locale; considerare biopsia'; }
-      else if(A>=1 || m.IC || m.lamellated || matrix==='chondroid'){ cat = 'BR-3 (indeterminato)'; mgmt = 'Approfondimento (RM/TC) e follow-up ravvicinato'; }
-      return [cat, mgmt];
+      const pain = document.getElementById('br_pain')?.checked || false;
+      const hxCa = document.getElementById('br_cancer')?.checked || false;
+      const typical = document.getElementById('br_typical')?.checked || false;
+      const fat = document.getElementById('br_fat')?.checked || false;
+      const aggrPeri = document.getElementById('br_aggr_peri')?.checked || false;
+      const cortex = document.getElementById('br_cortex')?.checked || false;
+      const soft = document.getElementById('br_soft')?.checked || false;
+      const deepScallop = document.getElementById('br_deep_scallop')?.checked || false;
+
+      if(typical || fat) {
+        return ['BR-1 (benigno tipico)', 'Nessuna ulteriore indagine / follow-up se indicato'];
+      }
+      if(aggrPeri || cortex || soft || deepScallop || A>=4 || (hxCa && pain)) {
+        return ['BR-4 (sospetto elevato)', 'Invio a centro di riferimento; RM per staging; considerare biopsia'];
+      }
+      if(pain || A>=1 || m.IC || m.II || m.III) {
+        return ['BR-3 (indeterminato)', 'Approfondimento (RM/TC) e follow-up ravvicinato'];
+      }
+      return ['BR-2 (verosimile benigno)', 'Follow-up/nessuna ulteriore indagine'];
     }
+
     function whyText(A, matrix, m, p, e, age, site, long, trans){
       const bullets = [];
-      bullets.push('Età: '+age+' → impatta i priori (es. <20 aa: osteosarcoma/Ewing; >40 aa: metastasi/mieloma). [Sez. Age]');
-      if((site||'').includes('Colonna')) bullets.push('Sede: colonna → emangioma, metastasi/mieloma più probabili. [Sez. Location]');
-      if(matrix==='chondroid') bullets.push('Matrice condroide (ring-and-arc) → enchondroma/condrosarcoma. [Sez. Matrix]');
-      if(matrix==='osteoid') bullets.push('Matrice osteoide → osteoma osteoide/osteosarcoma. [Sez. Matrix]');
-      if(m.III||m.II||p.hair||p.sunburst||p.codman||e.soft||e.corticalBreak) bullets.push('Segni di aggressività (margini II/III, periostale aggressiva, massa extraossea, rottura corticale). [Sez. Margins/Periosteal/Soft-tissue]');
-      if(e.nidus) bullets.push('Dolore notturno con sollievo ai FANS → osteoma osteoide. [Intracorticale]');
+      bullets.push('Età: '+age+' → priors (<20: osteosarcoma/Ewing; >40: metastasi/mieloma).');
+      if((site||'').includes('Colonna')) bullets.push('Sede: colonna → emangioma, metastasi/mieloma più probabili.');
+      if((site||'').includes('Mano/Piede')) bullets.push('Mano/Piede: enchondroma comune; se condroide + aggressività → considerare condrosarcoma LG.');
+      if(matrix==='chondroid') bullets.push('Matrice condroide (ring-and-arc) → enchondroma/condrosarcoma.');
+      if(matrix==='osteoid') bullets.push('Matrice osteoide → osteoma osteoide/osteosarcoma.');
+      if(m.III||m.II||p.hair||p.sunburst||p.codman||e.soft||e.corticalBreak) bullets.push('Segni di aggressività (margini II/III, periostale aggressiva, massa extraossea, rottura corticale).');
+      if(e.nidus) bullets.push('Dolore notturno con sollievo FANS → osteoma osteoide.');
       if(e.fluid) bullets.push('Fluid–fluid levels → ABC.');
-      if(long==='epiphysis') bullets.push('Localizzazione epifisaria → GCT/Chondroblastoma. [Longitudinal]');
+      if(long==='epiphysis') bullets.push('Localizzazione epifisaria → GCT/Chondroblastoma.');
       return '<ul>'+bullets.map(b=>'<li>'+b+'</li>').join('')+'</ul>';
     }
+
     function renderDx(list){const box=document.getElementById('dxList'); box.innerHTML=''; if(!list.length){box.innerHTML='<div class="tiny">Inserire dati.</div>'; return;}
       list.forEach(([name,score])=>{const d=document.createElement('div'); const pct=Math.round(score*100); d.className='dx-item';
         d.innerHTML='<div><strong>'+name+'</strong><br><span class="tiny">confidenza stimata: '+pct+'%</span></div><progress max="100" value="'+pct+'" style="width:170px;height:10px"></progress>'; box.appendChild(d);});
@@ -272,14 +310,14 @@
       renderBoneRADS(brCat, brMgmt);
       document.getElementById('why').innerHTML = whyText(A, matrix, m, p, e, age, site, long, trans);
       renderTemplate(age, site, long, trans, matrix, m, p, e);
-      localStorage.setItem('bta_last_v12', JSON.stringify({age,skeleton,site,long,trans,matrix,m,p,e,dx}));
+      localStorage.setItem('bta_last_v13', JSON.stringify({age,skeleton,site,long,trans,matrix,m,p,e,dx}));
     });
 
     document.getElementById('export').addEventListener('click',()=>{
-      const saved = localStorage.getItem('bta_last_v12'); if(!saved) return alert('Nessun caso da esportare');
+      const saved = localStorage.getItem('bta_last_v13'); if(!saved) return alert('Nessun caso da esportare');
       const p = JSON.parse(saved);
       const now=new Date().toISOString().slice(0,16).replace('T',' ');
-      const lines=['BoneTumorAid (v1.2) — Export '+now,'','DATI:','Età: '+(p.age||'-'),'Sede: '+(p.site||'-'),'Long/Trans: '+(p.long||'-')+' / '+(p.trans||'-'),'Matrice: '+(p.matrix||'-'),'','Diagnosi differenziali:'];
+      const lines=['BoneTumorAid (v1.3) — Export '+now,'','DATI:','Età: '+(p.age||'-'),'Sede: '+(p.site||'-'),'Long/Trans: '+(p.long||'-')+' / '+(p.trans||'-'),'Matrice: '+(p.matrix||'-'),'','Diagnosi differenziali:'];
       (p.dx||[]).forEach(([n,s],i)=>lines.push((i+1)+'. '+n+' ('+Math.round(s*100)+'%)'));
       const blob=new Blob([lines.join('\n')],{type:'text/plain'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='BoneTumorAid_case.txt'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     });
